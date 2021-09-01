@@ -137,8 +137,18 @@ def send_request(request):
         print("Order successfully placed!")
 
 
+# Returns all symbols names that can be traded on the market
+def get_symbols_name():
+    symbols = mt5.symbols_get()
+    name_list = []
+    for symbol in symbols:
+        name_list.append(symbol.name)
+    return name_list
+
+
 connect()
+print(get_symbols_name())
 # close_position_ticket(3659385)
 # close_position_symbol(symbol='ETHUSD')
-open_position('GOOGLE', 'BUY')
+# open_position('GOOGLE', 'BUY')
 # open_position('ETHUSD', 'BUY')

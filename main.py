@@ -25,14 +25,22 @@ def text_to_ticket(message):
     # TODO: add functionality to get all set updates not only the first one in the message
     processed_list = processed_list + re.findall(r'RAPID UPDATE.*\s.*\s.*\s.*', message)
     print(processed_list)
+    if len(processed_list) != 0:
+        print('Company: ', extract_company(processed_list[0]))
 
-    if message.find('BUY NOW') != -1:  # Using the find() method of a string to look for Buy orders
+    if message.find('BUY') != -1:  # Using the find() method of a string to look for Buy orders
         pass
-        #print(message)
+        # print(message)
 
 
 def extract_company(message):  # Takes in a partly processed message containing the type of order and the company
-    return 1
+    symbols_list = get_symbols_name()
+    result = -1
+    for symbol in symbols_list:
+        if message.find(symbol) != -1:
+            result = symbol
+            break
+    return result
 
 
 @client.on(events.NewMessage(chats=chat))
