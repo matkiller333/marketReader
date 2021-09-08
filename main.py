@@ -10,10 +10,12 @@ chat = '[VIP] SmartTrader™'
 
 
 class Ticket:
-    def __init__(self, symbol, name, order, modifier=1):
+    def __init__(self, symbol, order, sl=None, tp=None, position=None, modifier=1):
         self.symbol = symbol
-        self.name = name
         self.order = order
+        self.sl = sl
+        self.tp = tp
+        self.position = position  # Position ID
         self.modifier = modifier
 
 
@@ -26,18 +28,24 @@ def text_to_ticket(message):
     processed_list = processed_list + re.findall(r'RAPID UPDATE.*\s.*\s.*\s.*', message)
     print(processed_list)
     if len(processed_list) != 0:
+        processed_list[0] = processed_list[0].replace("/", "")  # Removes / for comparison purposes
         print('Company: ', extract_company(processed_list[0]))
 
     if message.find('BUY') != -1:  # Using the find() method of a string to look for Buy orders
-        pass
-        # print(message)
+        order_type = "BUY"
+    elif message.find('SELL') != -1:  # look for Sell orders
+        order_type = "SELL"
+    elif message.find('RAPID UPDATE') != -1:  # Look for tp/sl orders
+        order_type = "UPDATE"
+    else:
+        order_type = None
 
 
 def extract_company(message):  # Takes in a partly processed message containing the type of order and the company
     symbols_list = get_symbols_name()
     result = -1
     for symbol in symbols_list:
-        if message.find(symbol) != -1:
+        if re.search(symbol, message, re.IGNORECASE):
             result = symbol
             break
     return result

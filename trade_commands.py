@@ -127,6 +127,25 @@ def close_position_symbol(symbol, volume="ALL"):
         close_position_ticket(ticket)
 
 
+def update_position(ticket):
+    request = {
+        "action": mt5.TRADE_ACTION_MODIFY,
+        "symbol": ticket.symbol,
+        "volume": mt5.positions_get(ticket=ticket)[0].volume,
+        # "type": mt5.ORDER_TYPE_SELL,
+        "position": ticket.position,
+        "sl": ticket.sl,
+        "tp": ticket.tp,
+        # "price": price,
+        # "deviation": deviation,
+        "magic": 123456,
+        "comment": "python script update",
+        "type_time": mt5.ORDER_TIME_GTC,
+        "type_filling": mt5.ORDER_FILLING_IOC,
+    }
+    send_request(request)
+
+
 def send_request(request):
     result = mt5.order_send(request)
 
